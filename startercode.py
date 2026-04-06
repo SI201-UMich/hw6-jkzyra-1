@@ -156,6 +156,63 @@ def get_longest_lifespan_breed(cache_file):
         A tuple (breed_name, max_lifespan_integer) for the winning breed, OR the
         string "No breeds found" if no breed in the cache has a life.max value.
     """
+    cache = load_json(cache_file)
+    
+    valid_breeds = []
+    
+    for url, entry in cache.items():
+        
+        if "data" not in entry:
+            continue  
+        
+        data = entry["data"]
+        
+        if "attributes" not in data:
+            continue  
+        
+        attributes = data["attributes"]
+        
+        if "name" not in attributes:
+            continue 
+        
+        name = attributes["name"]
+        
+        if "life" not in attributes:
+            continue 
+        
+        life = attributes["life"]
+        
+        if "max" not in life:
+            continue  
+        
+        max_lifespan = life["max"]
+        
+        if type(max_lifespan) != int:
+            continue  
+        
+        valid_breeds.append((name, max_lifespan))
+    
+    if len(valid_breeds) == 0:
+        return "No breeds found"
+    
+
+    best_name = valid_breeds[0][0]
+    best_lifespan = valid_breeds[0][1]
+    
+
+    for breed in valid_breeds:
+        name = breed[0]
+        lifespan = breed[1]
+        
+        if lifespan > best_lifespan:
+            best_name = name
+            best_lifespan = lifespan
+        elif lifespan == best_lifespan:
+            if name < best_name:
+                best_name = name
+                best_lifespan = lifespan
+    
+    return (best_name, best_lifespan)
 
 
 
