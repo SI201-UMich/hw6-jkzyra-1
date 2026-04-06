@@ -2,7 +2,7 @@
 # Your name: 
 # Your student id: 
 # Your email: 
-# Who or what you worked with on this homework (including generative AI like ChatGPT): Generative AI
+# Who or what you worked with on this homework (including generative AI like ChatGPT): 
 
 # If you worked with generative AI also add a statement for how you used it.
 # e.g.:
@@ -57,6 +57,10 @@ def create_cache(dictionary, filename):
     RETURNS:
         None
     """
+    with open(filename, 'w', encoding='utf-8') as file:
+        json.dump(dictionary, file)
+
+ 
 
  
 
