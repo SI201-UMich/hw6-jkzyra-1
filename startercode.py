@@ -233,6 +233,55 @@ def get_groups_above_cutoff(cutoff, cache_file):
         A dictionary {group_uuid: count} for groups with count >= cutoff only.
     """
 
+    cache = load_json(cache_file)
+    
+
+    group_counts = {}
+    
+    for url, entry in cache.items():
+
+        
+        if "data" not in entry:
+            continue 
+        
+        data = entry["data"]
+        
+        if "relationships" not in data:
+            continue  
+        
+        relationships = data["relationships"]
+        
+        if "group" not in relationships:
+            continue 
+        
+        group = relationships["group"]
+        
+
+        if "data" not in group:
+            continue  
+        
+        group_data = group["data"]
+        
+        if "id" not in group_data:
+            continue  
+        
+        group_id = group_data["id"]
+        
+        
+        if group_id in group_counts:
+            group_counts[group_id] = group_counts[group_id] + 1
+        else:
+            group_counts[group_id] = 1
+    
+    result = {}
+    
+    for group_id, count in group_counts.items():
+        if count >= cutoff:
+            result[group_id] = count
+    
+    return result
+
+
 
 
 # Extra Credit
@@ -256,6 +305,7 @@ def recommend_breeds_in_same_group(breed_name, cache_file):
             "No group information available for '{breed_name}'."  (no group id)
             "No recommendations found based on '{breed_name}'."  (no other breeds in that group)
     """
+
 
 
 
