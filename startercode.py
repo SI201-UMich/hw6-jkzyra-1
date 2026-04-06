@@ -1,8 +1,9 @@
 # SI 201 HW6 (APIs, JSON, and Caching)
-# Your name:
-# Your student id:
-# Your email:
-# Who or what you worked with on this homework (including generative AI like ChatGPT):
+# Your name: 
+# Your student id: 
+# Your email: 
+# Who or what you worked with on this homework (including generative AI like ChatGPT): Generative AI
+
 # If you worked with generative AI also add a statement for how you used it.
 # e.g.:
 # Asked ChatGPT for help debugging and understanding the JSON structure
@@ -36,7 +37,12 @@ def load_json(filename):
         A dictionary with the JSON data, OR an empty dictionary {} if the file
         cannot be opened or is not valid JSON.
     """
-    pass
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            return data
+    except:
+        return {}
 
 
 def create_cache(dictionary, filename):
@@ -51,7 +57,8 @@ def create_cache(dictionary, filename):
     RETURNS:
         None
     """
-    pass
+
+ 
 
 
 def search_breed(breed_id):
@@ -68,7 +75,7 @@ def search_breed(breed_id):
         JSON body as a dict (with a top-level 'data' key on success), OR None if the
         request failed or the response does not represent a successful breed lookup.
     """
-    pass
+
 
 
 def update_cache(breed_ids, cache_file):
@@ -85,7 +92,7 @@ def update_cache(breed_ids, cache_file):
         A string: "Cached data for {percentage}% of breeds",
         where percentage = (successful_new_adds / len(breed_ids)) * 100.
     """
-    pass
+
 
 
 def get_longest_lifespan_breed(cache_file):
@@ -100,7 +107,7 @@ def get_longest_lifespan_breed(cache_file):
         A tuple (breed_name, max_lifespan_integer) for the winning breed, OR the
         string "No breeds found" if no breed in the cache has a life.max value.
     """
-    pass
+
 
 
 def get_groups_above_cutoff(cutoff, cache_file):
@@ -119,7 +126,7 @@ def get_groups_above_cutoff(cutoff, cache_file):
     RETURNS:
         A dictionary {group_uuid: count} for groups with count >= cutoff only.
     """
-    pass
+
 
 
 # Extra Credit
@@ -143,6 +150,7 @@ def recommend_breeds_in_same_group(breed_name, cache_file):
             "No group information available for '{breed_name}'."  (no group id)
             "No recommendations found based on '{breed_name}'."  (no other breeds in that group)
     """
+
 
 
 class TestHomeworkDogAPI(unittest.TestCase):
