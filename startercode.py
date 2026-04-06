@@ -1,15 +1,15 @@
 # SI 201 HW6 (APIs, JSON, and Caching)
-# Your name: 
-# Your student id: 
-# Your email: 
-# Who or what you worked with on this homework (including generative AI like ChatGPT): 
+# Your name: Jessica Kozyra
+# Your student id: 71221230
+# Your email: jkozyra@umich.edu
+# Who or what you worked with on this homework (including generative AI like ChatGPT): Generative AI
 
 # If you worked with generative AI also add a statement for how you used it.
 # e.g.:
 # Asked ChatGPT for help debugging and understanding the JSON structure
-#
+# Used AI when I needed help with the code and debugging, especially when test cases were coming out odd. I also used it to double check the rubric requirements to make sure I was checking off each of the criteria. 
 # Did your use of GenAI on this assignment align with your goals and guidelines in your Gen AI contract? If not, why?
-#
+# Yes, it did.
 # --- ARGUMENTS & EXPECTED RETURN VALUES PROVIDED --- #
 # --- SEE INSTRUCTIONS FOR FULL DETAILS ON METHOD IMPLEMENTATION --- #
 
@@ -305,6 +305,74 @@ def recommend_breeds_in_same_group(breed_name, cache_file):
             "No group information available for '{breed_name}'."  (no group id)
             "No recommendations found based on '{breed_name}'."  (no other breeds in that group)
     """
+    cache = load_json(cache_file)
+    
+    if len(cache) == 0:
+        return "No breed data found in cache."
+    
+    all_breeds = {}
+    
+    for url, entry in cache.items():
+        
+        if "data" not in entry:
+            continue
+        
+        data = entry["data"]
+        
+        if "attributes" not in data:
+            continue
+        
+        attributes = data["attributes"]
+        
+        if "name" not in attributes:
+            continue
+        
+        name = attributes["name"]
+        
+        group_id = None  
+        
+        if "relationships" in data:
+            relationships = data["relationships"]
+            if "group" in relationships:
+                group = relationships["group"]
+                if "data" in group:
+                    group_data = group["data"]
+                    if "id" in group_data:
+                        group_id = group_data["id"]
+        
+        lowercase_name = name.lower()
+        all_breeds[lowercase_name] = {
+            'name': name,      
+            'group_id': group_id  
+        }
+    
+    target_lowercase = breed_name.lower()
+    
+    if target_lowercase not in all_breeds:
+        return "'" + breed_name + "' is not in the cache."
+    
+    target_info = all_breeds[target_lowercase]
+    target_original_name = target_info['name']
+    target_group_id = target_info['group_id']
+    
+    if target_group_id is None:
+        return "No group information available for '" + breed_name + "'."
+    
+    recommendations = []
+    
+    for lowercase_name, info in all_breeds.items():
+        if lowercase_name == target_lowercase:
+            continue
+        
+        if info['group_id'] == target_group_id:
+            recommendations.append(info['name'])
+    
+    if len(recommendations) == 0:
+        return "No recommendations found based on '" + breed_name + "'."
+    
+    recommendations.sort()
+    
+    return recommendations
 
 
 
@@ -531,7 +599,7 @@ class TestHomeworkDogAPI(unittest.TestCase):
     # -------------------------
     # extra credit - uncomment tests below to evaluate extra credit function
     # -------------------------
-    """
+
     def test_recommend_breeds_in_same_group_empty_cache(self):
         create_cache({}, self.test_cache_file)
         self.assertEqual(
@@ -636,7 +704,7 @@ class TestHomeworkDogAPI(unittest.TestCase):
             recommend_breeds_in_same_group("breed a", self.test_cache_file),
             ["Breed B", "Breed Z"],
         )
-    """
+
 
 
 if __name__ == "__main__":
